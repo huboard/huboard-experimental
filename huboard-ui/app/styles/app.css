@@ -1,0 +1,20 @@
+.columns {
+  display: flex;
+}
+
+.column {
+  margin: 10px;
+}
+
+.cards {
+  padding: 0;
+}
+
+.card {
+  list-style-type: none;
+  margin: 4px;
+  border-style: solid;
+  border-width: 1px;
+  border-radius: 4px;
+  text-align: center;
+}

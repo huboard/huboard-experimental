@@ -1,0 +1,7 @@
+<h3> The Board: </h3>
+
+<div class="columns">
+  {{#each model.columns key="@index" as |column|}}
+    {{hb-column column=column}}
+  {{/each}}
+</div>
