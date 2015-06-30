@@ -9,6 +9,7 @@ var BoardService = Ember.Service.extend({
     return this.get(`model.${key}`);
   },
 
+  //This is all probably its own service?
   initIssueDragAndDrop: function(){
     Ember.$(".cards").sortable({
       items: "li.card",

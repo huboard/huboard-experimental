@@ -6,7 +6,7 @@ var Board = Ember.Object.extend({
       return repo.issues;
     });
     return _.flatten(issues);
-  }.property("repos.issues.@each", "repos.issues.@each.column.index")
+  }.property("repos.issues.[]", "repos.issues.@each.column")
 });
 
 export default Board;

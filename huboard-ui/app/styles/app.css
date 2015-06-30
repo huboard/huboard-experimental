@@ -1,3 +1,15 @@
+.container {
+  display: flex;
+}
+
+.container .main {
+  width: 100%
+}
+
+.container .other {
+  width: 100%
+}
+
 .columns {
   display: flex;
 }
@@ -17,4 +29,8 @@
   border-width: 1px;
   border-radius: 4px;
   text-align: center;
+}
+
+.array-observer {
+  float: right;
 }
