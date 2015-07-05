@@ -1,6 +1,6 @@
 <h3> {{column.name}} </h3>
 <ul class="cards">
-  {{#each issues key="@index" as |issue|}}
+  {{#each issues as |issue|}}
     {{hb-card issue=issue}}
   {{/each}}
 </ul>

@@ -19,6 +19,7 @@
 }
 
 .cards {
+  min-height: 5px;
   padding: 0;
 }
 
@@ -33,4 +34,10 @@
 
 .array-observer {
   float: right;
+}
+
+li.ui-sortable-placeholder {
+  list-style-type: none;
+  background: gray;
+  min-height: 5px;
 }

@@ -6,19 +6,19 @@ var ColumnComponent = Ember.Component.extend({
 
   classNames: ["column"],
   issues: function(){
-    console.log("resorting");
     var column = this.get("column");
     var issues = this.get("board.combinedIssues");
     return issues.filter(function(i){
       return i.column.index === column.index;
-    }).sort(function(a,b){
-      return a._data.order - b._data.order;
-    });
-  }.property("board.combinedIssues"),
-  reSortColumn: 0,
+    }).sort(this.sortStrategy);
+  }.property("board.combinedIssues.@each.columnIndex"),
   appendToSortable: function(){
+    this.get("sortable.columns").pushObject(this);
     this.get("sortable").append(this);
-  }.on("didInsertElement")
+  }.on("didInsertElement"),
+  sortStrategy: function(a,b){
+    return a._data.order - b._data.order;
+  },
 });
 
 export default ColumnComponent;

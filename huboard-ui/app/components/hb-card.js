@@ -3,9 +3,10 @@ import Ember from "ember";
 var HbCardComponent = Ember.Component.extend({
   sortable: Ember.inject.service(),
   tagName: "li",
-  classNames: ["card"],
+  classNames: ["card", "ui-sortable-handle"],
 
   addToSortable: function(){
+    console.log(this.element);
     this.get("sortable").addCard(this);
   }.on("didInsertElement"),
   removeFromSortable: function(){

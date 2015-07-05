@@ -6,39 +6,57 @@ var SortableService = Ember.Service.extend({
 
   append: function(column){
     var self = this;
-    this.get("columns").pushObject(column);
-    Ember.$(".cards").sortable({
+    column.$(".cards").sortable({
+      helper: "clone",
       items: "li.card",
+      placeholder: "ui-sortable-placeholder",
       connectWith: "ul.cards",
       start: function(ev, ui){
+        self.set("originIndex", ui.item.index());
+
         var column = self.findColumn(ui);
         self.set("originColumn", column);
 
-        var issue = self.findIssue(ui).get("issue");
-        self.set("issueInFlight", issue);
+        var card = self.findIssue(ui);
+        self.set("cardInFlight", card);
       },
       update: function(ev, ui){
         if (this !== ui.item.parent()[0]){return ;}
+
+        var index = ui.item.index();
         var column = self.findColumn(ui);
-        var issues = column.get("issues");
+        var issues = column.get("issues").sort(column.sortStrategy);
+        //issues.forEach(function(i){console.log(i.title)});
 
-        var issue = self.get("issueInFlight");
-        var issue_above = self.issueAbove(ui.item, issues);
-        var issue_below = self.issueBelow(ui.item, issues);
+        var issue = self.get("cardInFlight.issue");
+        var mod = self.indexModifier(index, self.columnChanged(column));
+        var issue_above = self.issueAbove(index, issues, mod);
+        var issue_below = self.issueBelow(index, issues, mod);
 
-        if(self.columnChanged(column)){ issue.set("column", column.get("column"))}
+        if(!issue_above && !issue_below){return ;}
         if(!issue_above){ return self.moveToTop(issue, issue_below); }
+        console.log(`Above: ${issue_above.title}`);
         if(!issue_below){ return self.moveToBottom(issue, issue_above); }
-
-        var above_order = issue_above._data.order;
-        var below_order = issue_below._data.order;
-        var order = (above_order + below_order) / 2;
-        issue.set("_data.order", order);
-      }
+        console.log(`Below: ${issue_below.title}`);
+        self.move(issue, issue_above, issue_below);
+      },
+      stop: function(ev, ui){
+        var column = self.findColumn(ui);
+        var issue = self.get("cardInFlight.issue");
+        if(self.columnChanged(column)){
+          issue.set("column", column.get("column"))
+        }
+      },
     });
   },
+  move: function(issue, issue_above, issue_below){
+    var above_order = issue_above._data.order;
+    var below_order = issue_below._data.order;
+    var order = (above_order + below_order) / 2;
+    issue.set("_data.order", order);
+  },
   moveToTop: function(issue, issue_below){
-    var order = issue_below._data.order / 2;
+    var order = (issue_below._data.order) / 2;
     issue.set("_data.order", order);
   },
   moveToBottom: function(issue, issue_above){
@@ -56,20 +74,31 @@ var SortableService = Ember.Service.extend({
       return card.$().is(element.item);
     });
   },
-  issueAbove: function(item, issues){
-    if(item.index()){
-      return issues.objectAt(item.index());
+  issueAbove: function(index, issues, mod){
+    if(index + mod && issues.length){
+      return issues.objectAt((index + mod) - 1);
     }
     return null;
   },
-  issueBelow: function(item, issues){
-    if(item.index() !== (issues.length - 1)){
-      return issues.objectAt(item.index() + 1);
+  issueBelow: function(index, issues, mod){
+    if(!(index + mod) && issues.length){
+      return issues.objectAt(0);
+    } else if((index + mod) !== (issues.length - 1)){
+      return issues.objectAt(index + mod);
+    } else if(index !== (issues.length - 1) && mod){
+      return issues.objectAt(index + mod);
+    } else if((index + mod) === issues.length - 1){
+      return issues.get("lastObject");
     }
     return null;
   },
   columnChanged: function(column){
     return !this.get("originColumn").$().is(column.$());
+  },
+  indexModifier: function(index, column_changed){
+    //Adjust based on issue dragging up or down
+    if(column_changed){ return 0; }
+    return index >= this.get("originIndex") ? 1 : 0;
   },
 
   cards: [],

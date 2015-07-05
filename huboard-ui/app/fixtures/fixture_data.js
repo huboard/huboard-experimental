@@ -5,15 +5,15 @@ import Column from "../models/column";
 
 var ColumnOne = Column.create({
     name: "Column 1",
-    index: 0 
+    index: 1 
 })
 var ColumnTwo = Column.create({
     name: "Column 2",
-    index: 1 
+    index: 2 
 })
 var ColumnThree = Column.create({
     name: "Column 3",
-    index: 2 
+    index: 3 
 })
 
 
@@ -29,17 +29,17 @@ var FixtureData = Ember.Object.create({
       issues: [
         Issue.create({
           title: "Issue 1",
-          _data: {order: 0},
-          column: ColumnOne
-        }),
-        Issue.create({
-          title: "Issue 2",
           _data: {order: 1},
           column: ColumnOne
         }),
         Issue.create({
-          title: "Issue 3",
+          title: "Issue 2",
           _data: {order: 2},
+          column: ColumnOne
+        }),
+        Issue.create({
+          title: "Issue 3",
+          _data: {order: 3},
           column: ColumnOne
         })
       ]
@@ -49,17 +49,17 @@ var FixtureData = Ember.Object.create({
       issues: [
         Issue.create({
           title: "Issue 4",
-          _data: {order: 0},
-          column: ColumnTwo
-        }),
-        Issue.create({
-          title: "Issue 5",
           _data: {order: 1},
           column: ColumnTwo
         }),
         Issue.create({
-          title: "Issue 6",
+          title: "Issue 5",
           _data: {order: 2},
+          column: ColumnTwo
+        }),
+        Issue.create({
+          title: "Issue 6",
+          _data: {order: 3},
           column: ColumnTwo
         })
       ]
@@ -69,17 +69,17 @@ var FixtureData = Ember.Object.create({
       issues: [
         Issue.create({
           title: "Issue 7",
-          _data: {order: 0},
-          column: ColumnThree
-        }),
-        Issue.create({
-          title: "Issue 8",
           _data: {order: 1},
           column: ColumnThree
         }),
         Issue.create({
-          title: "Issue 9",
+          title: "Issue 8",
           _data: {order: 2},
+          column: ColumnThree
+        }),
+        Issue.create({
+          title: "Issue 9",
+          _data: {order: 3},
           column: ColumnThree
         })
       ]
