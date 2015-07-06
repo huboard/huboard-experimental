@@ -25,8 +25,7 @@ var SortableService = Ember.Service.extend({
 
         var index = ui.item.index();
         var column = self.findColumn(ui);
-        var issues = column.get("issues").sort(column.sortStrategy);
-        //issues.forEach(function(i){console.log(i.title)});
+        var issues = column.get("sortedIssues").sort(column.sortStrategy);
 
         var issue = self.get("cardInFlight.issue");
         var mod = self.indexModifier(index, self.columnChanged(column));
@@ -35,9 +34,7 @@ var SortableService = Ember.Service.extend({
 
         if(!issue_above && !issue_below){return ;}
         if(!issue_above){ return self.moveToTop(issue, issue_below); }
-        console.log(`Above: ${issue_above.title}`);
         if(!issue_below){ return self.moveToBottom(issue, issue_above); }
-        console.log(`Below: ${issue_below.title}`);
         self.move(issue, issue_above, issue_below);
       },
       stop: function(ev, ui){

@@ -6,7 +6,6 @@ var HbCardComponent = Ember.Component.extend({
   classNames: ["card", "ui-sortable-handle"],
 
   addToSortable: function(){
-    console.log(this.element);
     this.get("sortable").addCard(this);
   }.on("didInsertElement"),
   removeFromSortable: function(){
