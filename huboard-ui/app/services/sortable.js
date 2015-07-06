@@ -7,7 +7,6 @@ var SortableService = Ember.Service.extend({
   append: function(column){
     var self = this;
     column.$(".cards").sortable({
-      helper: "clone",
       items: "li.card",
       placeholder: "ui-sortable-placeholder",
       connectWith: "ul.cards",
@@ -25,7 +24,7 @@ var SortableService = Ember.Service.extend({
 
         var index = ui.item.index();
         var column = self.findColumn(ui);
-        var issues = column.get("sortedIssues").sort(column.sortStrategy);
+        var issues = column.get("sortedIssues");
 
         var issue = self.get("cardInFlight.issue");
         var mod = self.indexModifier(index, self.columnChanged(column));
@@ -33,32 +32,31 @@ var SortableService = Ember.Service.extend({
         var issue_below = self.issueBelow(index, issues, mod);
 
         if(!issue_above && !issue_below){return ;}
-        if(!issue_above){ return self.moveToTop(issue, issue_below); }
-        if(!issue_below){ return self.moveToBottom(issue, issue_above); }
-        self.move(issue, issue_above, issue_below);
+        if(!issue_above){ return self.moveToTop(issue, issue_below, column); }
+        if(!issue_below){ return self.moveToBottom(issue, issue_above, column); }
+        self.move(issue, issue_above, issue_below, column);
       },
       stop: function(ev, ui){
         var column = self.findColumn(ui);
-        var issue = self.get("cardInFlight.issue");
         if(self.columnChanged(column)){
-          issue.set("column", column.get("column"))
+          self.get("cardInFlight").moveToColumn(column);
         }
       },
     });
   },
-  move: function(issue, issue_above, issue_below){
+  move: function(issue, issue_above, issue_below, column){
     var above_order = issue_above._data.order;
     var below_order = issue_below._data.order;
     var order = (above_order + below_order) / 2;
-    issue.set("_data.order", order);
+    column.reorderIssue(issue, order);
   },
-  moveToTop: function(issue, issue_below){
+  moveToTop: function(issue, issue_below, column){
     var order = (issue_below._data.order) / 2;
-    issue.set("_data.order", order);
+    column.reorderIssue(issue, order);
   },
-  moveToBottom: function(issue, issue_above){
+  moveToBottom: function(issue, issue_above, column){
     var order = issue_above._data.order + 1;
-    issue.set("_data.order", order);
+    column.reorderIssue(issue, order);
   },
   findColumn: function(element){
     return this.get("columns").find(function(column){

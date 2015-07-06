@@ -6,6 +6,16 @@
   width: 100%
 }
 
+.container .sim {
+  float: left;
+  width: 50%;
+}
+
+.simulator {
+  display: flex;
+  flex-direction: column;
+}
+
 .container .other {
   width: 100%
 }
