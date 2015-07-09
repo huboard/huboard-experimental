@@ -29,7 +29,7 @@ var SortableService = Ember.Service.extend({
         var index = ui.item.index();
         var mod = self.indexModifier(index, self.columnChanged());
 
-        var issues = column.get("issues");
+        var issues = column.get("cards");
         var issue_above = self.issueAbove(index, issues, mod);
         var issue_below = self.issueBelow(index, issues, mod);
 
@@ -49,16 +49,18 @@ var SortableService = Ember.Service.extend({
     var column = this.cardMoveData.targetColumn;
     var issue = this.cardMoveData.card.get("issue");
     var order = this.cardMoveData.order;
+    issue.set("_data.order", order);
     if(this.columnChanged()){
       issue.set("column", column.get("column"));
     }
-    issue.set("_data.order", order);
   },
   calculateCardMove: function(issue_above, issue_below){
     var issue = this.cardMoveData.card.get("issue");
     if(!issue_above && !issue_below){return issue.get("order"); }
     if(!issue_above){ return this.moveToTop(issue, issue_below); }
+    console.log(`Issue Above Order: ${issue_above.title}`);
     if(!issue_below){ return this.moveToBottom(issue, issue_above); }
+    console.log(`Issue Below Order: ${issue_below.title}`);
     return this.move(issue, issue_above, issue_below);
   },
   move: function(issue, issue_above, issue_below, column){
@@ -109,7 +111,7 @@ var SortableService = Ember.Service.extend({
   indexModifier: function(index, column_changed){
     //Adjust based on issue dragging up or down
     if(column_changed){ return 0; }
-    return index >= this.get("originIndex") ? 1 : 0;
+    return index >= this.cardMoveData.originIndex ? 1 : 0;
   },
 
   cards: [],

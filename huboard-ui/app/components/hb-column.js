@@ -4,7 +4,11 @@ var ColumnComponent = Ember.Component.extend({
   board: Ember.inject.service(),
   sortable: Ember.inject.service(),
   classNames: ["column"],
+  cards: null,
 
+  renderCards: function(){
+    this.set("cards", this.get("issues"));
+  }.on("didInitAttrs", "didUpdateAttrs"),
   issues: function(){
     var column = this.get("column");
     var issues = this.get("board.combinedIssues");
