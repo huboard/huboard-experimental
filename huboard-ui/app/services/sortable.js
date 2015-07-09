@@ -29,7 +29,7 @@ var SortableService = Ember.Service.extend({
         var index = ui.item.index();
         var mod = self.indexModifier(index, self.columnChanged());
 
-        var issues = column.get("cards");
+        var issues = column.get("issues");
         var issue_above = self.issueAbove(index, issues, mod);
         var issue_below = self.issueBelow(index, issues, mod);
 
