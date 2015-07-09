@@ -11,52 +11,67 @@ var SortableService = Ember.Service.extend({
       placeholder: "ui-sortable-placeholder",
       connectWith: "ul.cards",
       start: function(ev, ui){
-        self.set("originIndex", ui.item.index());
+        self.cardMoveData = {};
+        self.cardMoveData.originIndex = ui.item.index();
 
         var column = self.findColumn(ui);
-        self.set("originColumn", column);
+        self.cardMoveData.originColumn = column;
 
         var card = self.findIssue(ui);
-        self.set("cardInFlight", card);
+        self.cardMoveData.card = card;
       },
       update: function(ev, ui){
         if (this !== ui.item.parent()[0]){return ;}
 
-        var index = ui.item.index();
         var column = self.findColumn(ui);
-        var issues = column.get("sortedIssues");
+        self.cardMoveData.targetColumn = column;
 
-        var issue = self.get("cardInFlight.issue");
-        var mod = self.indexModifier(index, self.columnChanged(column));
+        var index = ui.item.index();
+        var mod = self.indexModifier(index, self.columnChanged());
+
+        var issues = column.get("issues");
         var issue_above = self.issueAbove(index, issues, mod);
         var issue_below = self.issueBelow(index, issues, mod);
 
-        if(!issue_above && !issue_below){return ;}
-        if(!issue_above){ return self.moveToTop(issue, issue_below, column); }
-        if(!issue_below){ return self.moveToBottom(issue, issue_above, column); }
-        self.move(issue, issue_above, issue_below, column);
+        var order = self.calculateCardMove(issue_above, issue_below);
+        self.cardMoveData.order = order;
       },
       stop: function(ev, ui){
-        var column = self.findColumn(ui);
-        if(self.columnChanged(column)){
-          self.get("cardInFlight").moveToColumn(column);
-        }
+        $(this).sortable("cancel");
+        $(ui.sender).sortable("cancel");
+        Ember.run.once(function(){
+          self.handleCardMove();
+        });
       },
     });
+  },
+  handleCardMove: function(){
+    var column = this.cardMoveData.targetColumn;
+    var issue = this.cardMoveData.card.get("issue");
+    var order = this.cardMoveData.order;
+    if(this.columnChanged()){
+      issue.set("column", column.get("column"));
+    }
+    issue.set("_data.order", order);
+    column.notifyPropertyChange("childViews");
+  },
+  calculateCardMove: function(issue_above, issue_below){
+    var issue = this.cardMoveData.card.get("issue");
+    if(!issue_above && !issue_below){return issue.get("order"); }
+    if(!issue_above){ return this.moveToTop(issue, issue_below); }
+    if(!issue_below){ return this.moveToBottom(issue, issue_above); }
+    return this.move(issue, issue_above, issue_below);
   },
   move: function(issue, issue_above, issue_below, column){
     var above_order = issue_above._data.order;
     var below_order = issue_below._data.order;
-    var order = (above_order + below_order) / 2;
-    column.reorderIssue(issue, order);
+    return (above_order + below_order) / 2;
   },
   moveToTop: function(issue, issue_below, column){
-    var order = (issue_below._data.order) / 2;
-    column.reorderIssue(issue, order);
+    return (issue_below._data.order) / 2;
   },
   moveToBottom: function(issue, issue_above, column){
-    var order = issue_above._data.order + 1;
-    column.reorderIssue(issue, order);
+    return issue_above._data.order + 1;
   },
   findColumn: function(element){
     return this.get("columns").find(function(column){
@@ -87,8 +102,10 @@ var SortableService = Ember.Service.extend({
     }
     return null;
   },
-  columnChanged: function(column){
-    return !this.get("originColumn").$().is(column.$());
+  columnChanged: function(){
+    var originColumn = this.cardMoveData.originColumn;
+    var targetColumn = this.cardMoveData.targetColumn;
+    return !originColumn.$().is(targetColumn.$());
   },
   indexModifier: function(index, column_changed){
     //Adjust based on issue dragging up or down
