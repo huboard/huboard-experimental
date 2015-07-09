@@ -4,7 +4,6 @@ var ColumnComponent = Ember.Component.extend({
   board: Ember.inject.service(),
   sortable: Ember.inject.service(),
   classNames: ["column"],
-  cards: null,
 
   issues: function(){
     var column = this.get("column");
@@ -18,6 +17,10 @@ var ColumnComponent = Ember.Component.extend({
     this.get("sortable.columns").pushObject(this);
     this.get("sortable").append(this);
   }.on("didInsertElement"),
+
+  sortStrategy: function(a,b){
+    return a._data.order - b._data.order;
+  }
 });
 
 export default ColumnComponent;

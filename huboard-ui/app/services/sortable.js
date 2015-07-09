@@ -53,7 +53,6 @@ var SortableService = Ember.Service.extend({
       issue.set("column", column.get("column"));
     }
     issue.set("_data.order", order);
-    column.notifyPropertyChange("childViews");
   },
   calculateCardMove: function(issue_above, issue_below){
     var issue = this.cardMoveData.card.get("issue");
