@@ -4,3 +4,9 @@
     {{hb-card issue=issue}}
   {{/each}}
 </ul>
+
+<ul class="not-cards">
+  {{#each issues as |issue|}}
+    <li> {{issue.title}} </li>
+  {{/each}}
+</ul>

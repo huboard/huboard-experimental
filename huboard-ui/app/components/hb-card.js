@@ -1,15 +1,14 @@
 import Ember from "ember";
 
 var HbCardComponent = Ember.Component.extend({
-  sortable: Ember.inject.service(),
   tagName: "li",
   classNames: ["card", "ui-sortable-handle"],
 
-  addToSortable: function(){
-    this.get("sortable").addCard(this);
+  registerToParent: function(){
+    this.get("parentView.cards").pushObject(this);
   }.on("didInsertElement"),
-  removeFromSortable: function(){
-    this.get("sortable").removeCard(this);
+  unregisterFromParent: function(){
+    this.get("parentView.cards").removeObject(this);
   }.on("willDestroyElement")
 });
 
