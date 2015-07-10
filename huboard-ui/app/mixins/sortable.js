@@ -13,9 +13,7 @@ var SortableMixin = Ember.Mixin.create(CardMoveMixin, {
         var column = cardMove.findColumn(ui, columns);
         var card = cardMove.findCard(ui, column);
         cardMove.data.card = card;
-
-        cardMove.data.clone = ui.clone().insertAfter(ui).hide();
-        return ui.clone();
+        return ui;
       },
       items: "li.card",
       placeholder: "ui-sortable-placeholder",
@@ -34,10 +32,6 @@ var SortableMixin = Ember.Mixin.create(CardMoveMixin, {
         var issue_below = cardMove.issueBelow(index, issues, mod);
 
         var issue_order = cardMove.calculateIssueOrder(issue_above, issue_below);
-
-        //$(this).sortable("cancel");
-        //$(ui.sender).sortable("cancel");
-
         var issue = cardMove.data.card.get("issue");
         column.moveIssue(issue, issue_order);
       },

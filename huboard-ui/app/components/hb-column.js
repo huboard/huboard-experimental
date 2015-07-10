@@ -15,8 +15,12 @@ var ColumnComponent = Ember.Component.extend(SortableMixin, {
   }.property("board.model.combinedIssues.@each.{columnIndex,order}"),
 
   moveIssue: function(issue, order){
-    issue.set("column", this.get("column"));
-    issue.set("_data.order", order);
+    var self = this;
+    this.get("issues").removeObject(issue);
+    Ember.run.schedule("afterRender", self, function(){
+      issue.set("column", self.get("column"));
+      issue.set("_data.order", order);
+    });
   },
   sortStrategy: function(a,b){
     return a._data.order - b._data.order;
