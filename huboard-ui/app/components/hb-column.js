@@ -1,23 +1,32 @@
 import Ember from "ember";
+import SortableMixin from "../mixins/sortable";
 
-var ColumnComponent = Ember.Component.extend({
+var ColumnComponent = Ember.Component.extend(SortableMixin, {
   board: Ember.inject.service(),
-  sortable: Ember.inject.service(),
-
   classNames: ["column"],
+  cards: Ember.A(),
+
   issues: function(){
-    console.log("resorting");
     var column = this.get("column");
     var issues = this.get("board.combinedIssues");
     return issues.filter(function(i){
       return i.column.index === column.index;
-    }).sort(function(a,b){
-      return a._data.order - b._data.order;
+    }).sort(this.sortStrategy);
+  }.property("board.model.combinedIssues.@each.{columnIndex,order}"),
+
+  moveIssue: function(issue, order){
+    var self = this;
+    this.get("issues").removeObject(issue);
+    Ember.run.schedule("afterRender", self, function(){
+      issue.set("column", self.get("column"));
+      issue.set("_data.order", order);
     });
-  }.property("board.combinedIssues"),
-  reSortColumn: 0,
-  appendToSortable: function(){
-    this.get("sortable").append(this);
+  },
+  sortStrategy: function(a,b){
+    return a._data.order - b._data.order;
+  },
+  register: function(){
+    this.sendAction("registerColumn", this);
   }.on("didInsertElement")
 });
 

@@ -6,6 +6,16 @@
   width: 100%
 }
 
+.container .sim {
+  float: left;
+  width: 50%;
+}
+
+.simulator {
+  display: flex;
+  flex-direction: column;
+}
+
 .container .other {
   width: 100%
 }
@@ -19,6 +29,7 @@
 }
 
 .cards {
+  min-height: 5px;
   padding: 0;
 }
 
@@ -33,4 +44,10 @@
 
 .array-observer {
   float: right;
+}
+
+li.ui-sortable-placeholder {
+  list-style-type: none;
+  background: gray;
+  min-height: 5px;
 }
