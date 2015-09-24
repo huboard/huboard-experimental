@@ -1,7 +1,7 @@
 import Ember from "ember";
 import SortableMixin from "../mixins/sortable";
 
-var ColumnComponent = Ember.Component.extend(SortableMixin, {
+var ColumnComponent = Ember.Component.extend({
   board: Ember.inject.service(),
   classNames: ["column"],
   cards: Ember.A(),
