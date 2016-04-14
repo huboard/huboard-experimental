@@ -1,7 +1,7 @@
 import Ember from "ember";
 
 var CardOrderMixin = Ember.Mixin.create({
-  calculateOrder: function(ev, ui, element, elements, registry){
+  calculateOrder: function(ui, element, elements, registry){
     var findViewData = function (element){
       return registry[$(element).attr("id")]
         .get("controller");

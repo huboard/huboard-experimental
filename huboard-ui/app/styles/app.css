@@ -439,7 +439,7 @@ th {
   height: 100%;
 }
 .ember-application > .ember-view {
-  min-height: 100vh;
+  max-height: 100vh;
   display: flex;
   flex-direction: column;
 }
@@ -449,9 +449,6 @@ th {
   flex: 1;
 }
 
-.debug {
-  width: 220px;
-}
 
 .container .main {
   display: flex;
@@ -459,19 +456,6 @@ th {
   flex-direction: column;
 }
 
-.container .sim {
-  float: left;
-  width: 50%;
-}
-
-.simulator {
-  display: flex;
-  flex-direction: column;
-}
-
-.container .other {
-  width: 100%
-}
 
 .columns {
   display: flex;
@@ -489,6 +473,7 @@ th {
   min-height: 5px;
   padding: 0;
   flex: 1;
+  overflow:auto;
 }
 
 .card {
@@ -499,14 +484,27 @@ th {
   margin-bottom: 12px;
 }
 
-.array-observer {
-  float: right;
-}
 
 li.ui-sortable-placeholder {
   list-style-type: none;
   background: #fafafa;
-  min-height: 68px;
   border: 1px dashed #ccc;
-  margin-bottom: 12px;
+}
+.debug {
+  width: 220px;
+  display: flex;
+  flex-direction: column;
+  overflow: auto;
+}
+
+.debug .sim {
+}
+
+.simulator {
+  display: flex;
+  flex-direction: column;
+}
+
+.container .other {
+  width: 100%
 }
